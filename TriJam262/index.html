@@ -1,0 +1,211 @@
+<DOCTYPE! html>
+<html>
+<head>
+<style>
+seg{
+	position:absolute;
+	height:min(8.1vw,8.1vh);
+	width:min(8.1vw,8.1vh);
+	background-color:black;
+	display:inline-block;
+}
+#square{
+	position:relative;
+	height:min(80vw,80vh);
+	width:min(80vw,80vh);
+	margin:auto;
+	border-style: solid;
+	border-width: min(1vw,1vh);
+	overflow:clip;
+}
+#gameover{
+	position:absolute;
+	width:min(80vw,80vh);
+	font-size:min(12vw,12vh);
+	text-align:center;
+	bottom:min(40vh,40vw);
+}
+#instructions{
+	position:absolute;
+	width:min(80vw,80vh);
+	font-size:min(5vw,5vh);
+	text-align:center;
+	top:min(40vh,40vw);
+}
+#title{
+	position:relative;
+	height:min(15vw,15vh);
+	width:min(80vw,80vh);
+	margin:auto;
+}
+#name{
+	position:relative;
+	float:left;
+	font-size:min(14vw,14vh);
+	left:0px;
+}
+#score{
+	position:relative;
+	float:right;
+	font-size:min(14vw,14vh);
+	right:0px;
+}
+</style>
+<script>
+window.onload = function () {
+input = []
+touched = false
+clicked = false
+
+document.addEventListener("mousedown", () => {
+	if (event.detail > 1) { event.preventDefault() }
+	clicked = true
+})
+
+document.addEventListener("mouseup", () => {
+	clicked = false
+})
+
+document.addEventListener("touchstart", () => {
+	if (event.detail > 1) { event.preventDefault() }
+	touched = true
+})
+
+document.addEventListener("touchend", () => {
+	touched = false
+})
+
+document.addEventListener("keydown", (event) => {
+	if(!input.includes(event.key)) {
+		input.push(event.key)
+	}
+})
+document.addEventListener("keyup", (event) => {
+	i = input.indexOf(event.key)
+	if(i != -1) {
+		input.splice(i,1)
+	}
+})
+
+enemies = []
+
+function makeEnemy() {
+	e = document.createElement("seg")
+	e.style.backgroundColor = "red"
+	e.style.bottom = "min(80vh,80vw)"
+	l = enemies.push([(Math.random()>=.5)*72,80,e])
+	e.style.left = "min(" + enemies[l-1][0]+"vh,"+enemies[l-1][0]+"vw"
+	document.getElementById("square").appendChild(e)
+}
+
+player = document.createElement("seg")
+player.style.backgroundColor = "black"
+player.style.left = "min(0vw,0vh)"
+player.style.bottom = "min(36vw,36vh)"
+document.getElementById("square").appendChild(player)
+
+deathNoise = document.getElementById("death")
+collectNoise = document.getElementById("collect")
+blip = document.getElementById("blip")
+
+x = 0
+xvel = 0
+gamestate = "start"
+score = 0
+timer = 0
+tutorial = 0
+setInterval(() => {
+
+	if(gamestate == "start") {
+		document.getElementById("gameover").innerHTML = "WELCOME"
+		document.getElementById("instructions").innerHTML = "press space to start"
+		if((input.includes(" ") || touched || clicked)) {
+			gamestate = "game"
+		}
+	}
+	
+	if(gamestate == "game") {
+	player.style.left = "min(" + x + "vh," + x + "vw)"
+	timer++
+	if(Math.random() < timer/5000+0.1  && timer%20==0 && (timer > 150 || tutorial > 1)) {
+		makeEnemy()
+	}
+	for(i = enemies.length-1; i >=0 ;i--) {
+		enemies[i][1]--
+		enemies[i][2].style.bottom = "min(" + enemies[i][1] + "vh,"+enemies[i][1]+"vw)"
+		if(enemies[i][0] > x-10 && enemies[i][0] < x+10 &&enemies[i][1] > 28 &&enemies[i][1] < 44) {
+			deathNoise.currentTime = 0
+			deathNoise.play()
+			gamestate = "gameover"
+			timer = 0
+		}
+		if(enemies[i][1] == 35) {		
+			score++
+			document.getElementById("score").innerHTML=score
+		}
+		if(enemies[i][1] <= -10) {
+			enemies[i][2].remove()
+			enemies.splice(i,1)
+		}
+	}
+	if((input.includes(" ") || touched || clicked) && (x == 0 || x == 72)) {
+		if(tutorial == 0) {
+			document.getElementById("gameover").innerHTML = "PRESS SPACE"
+			document.getElementById("instructions").innerHTML = "to jump across the screen"
+			tutorial++
+		}
+		if(tutorial == 1 && timer > 100) {
+			document.getElementById("gameover").innerHTML = "AVOID"
+			document.getElementById("instructions").innerHTML = "the red blocks"
+			tutorial++
+		}
+		if(tutorial > 1 && score > 1) {
+			document.getElementById("gameover").innerHTML = ""
+			document.getElementById("instructions").innerHTML = ""
+		}		
+		blip.currentTime = 0
+		blip.play()
+		xvel = (x==0)*5 - (x==72)*5
+ 	} else if (x <= 0 || x >= 72) {
+		x = (x>=72)*72
+		xvel = 0
+	}
+	x += xvel
+	}
+
+	if(gamestate == "gameover") {
+		timer++
+		document.getElementById("gameover").innerHTML = "GAME OVER"
+		document.getElementById("instructions").innerHTML = "press space to restart"
+		if((input.includes(" ") || touched || clicked) && timer > 50) {
+			gamestate = "game"
+			timer = 0
+			score = 0
+			for(i = enemies.length-1; i >=0 ;i--) {
+				enemies[i][2].remove()
+				enemies.splice(i,1)
+			}
+			document.getElementById("score").innerHTML=score
+			document.getElementById("gameover").innerHTML = ""
+			document.getElementById("instructions").innerHTML = ""
+		}
+	}
+},1000/60)
+}
+</script>
+</head>
+<body style="background-color:white;>
+<audio id="collect"><source src="powerUp.wav" type="audio/wav"></audio>
+<audio id="death"><source src="explosion.wav" type="audio/wav"></audio>
+<audio id="blip"><source src="blip.wav" type="audio/wav"></audio>
+<div id="title">
+<div id="name">Jumper</div>
+<div id="score">0</div>
+</div>
+<div id="square">
+<div id="gameover"></div>
+<div id="instructions"></div>
+</div>
+</body>
+
+</html>

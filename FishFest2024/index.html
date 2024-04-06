@@ -1,0 +1,624 @@
+<DOCTYPE! html>
+<html>
+<head>
+<style>
+seg{
+	position:absolute;
+	height:min(4vw,4vh);
+	width:min(4vw,4vh);
+	background-color:black;
+	display:inline-block;
+}
+button{
+	position:absolute;
+	height:min(10vh,10vw);
+	width:min(40vh,40vw);
+	text-align:center;
+}
+.option{
+	height:min(55vh,55vw);
+	width:min(20vh,20vw);
+}
+#square{
+	position:relative;
+	height:min(80vw,80vh);
+	width:min(80vw,80vh);
+	margin:auto;
+	border-style: solid;
+	border-width: min(1vw,1vh);
+	overflow:clip;
+}
+#gameover{
+	position:absolute;
+	width:min(80vw,80vh);
+	font-size:min(12vw,12vh);
+	text-align:center;
+	bottom:min(40vh,40vw);
+}
+#instructions{
+	position:absolute;
+	width:min(80vw,80vh);
+	font-size:min(5vw,5vh);
+	text-align:center;
+	top:min(40vh,40vw);
+}
+#title{
+	position:relative;
+	height:min(15vw,15vh);
+	width:min(80vw,80vh);
+	margin:auto;
+}
+#name{
+	position:relative;
+	float:left;
+	font-size:min(14vw,14vh);
+	left:0px;
+}
+#score{
+	position:relative;
+	float:right;
+	font-size:min(14vw,14vh);
+	right:0px;
+}
+
+</style>
+<script>
+window.onload = function() {
+day = 0
+FalseGodKryptix = "menu"
+cryssball = document.getElementById("clown")
+mx = 0
+my = 0
+x = 9.5
+y = 0
+spd = .1
+timer = 0
+document.getElementById("square").addEventListener("mousemove",(event) => {
+	mx = event.clientX
+	my = event.clientY
+})
+food = []
+enemy = []
+bigbad = document.getElementById("bigbad")
+
+function addEnemy() {
+	f = document.createElement("seg")
+	f.style.background = "red"
+	fx = -1 + (Math.random()<0.5)*21
+	fy = Math.random()*10
+	fdx = (Math.random()*0.2+0.005)*(1.04**day)
+	f.style.left = "min("+4*fx+"vh,"+4*fx+"vw)"
+	f.style.bottom = "min("+4*fy+"vh,"+4*fy+"vw)"
+	enemy.push([fx,fy,fdx,f])
+	document.getElementById("square").appendChild(f)
+}
+function addFood() {
+	f = document.createElement("seg")
+	f.style.background = "green"
+	fx = -1
+	fy = (1-Math.random()**2)*16+3
+	fdx = (Math.random()*0.16+0.04)*(1.04**day)
+	f.style.left = "min(-4vh,-4vw)"
+	f.style.bottom = "min("+4*fy+"vh,"+4*fy+"vw)"
+	food.push([fx,fy,fdx,f])
+	document.getElementById("square").appendChild(f)
+}
+
+function mainMenu() {
+	start = document.createElement("button")
+	start.type = "button"
+	start.style.left = "min(20vh,20vw)"
+	start.style.top = "min(35vh,35vw)"
+	start.innerHTML = "START"
+	start.style.fontSize = "min(8vh,8vw)"
+	start.onclick = () => {
+		start.remove()
+		FalseGodKryptix = "day"
+	}
+	credits = document.createElement("button")
+	credits.type = "button"
+	credits.style.width = "min(30vh,30vw)"
+	credits.style.left = "min(25vh,25vw)"
+	credits.style.height = "min(6vh,6vw)"
+	credits.style.top = "min(50vh,50vw)"
+	credits.innerHTML = "CREDITS"
+	credits.style.fontSize = "min(4vh,4vw)"
+	start.onclick = () => {
+		credits.remove()
+		start.remove()
+		FalseGodKryptix = "day"
+	}
+	credits.onclick = () => {
+		start.remove()
+		credits.remove()
+		mainCredits()
+		FalseGodKryptix = "credits"
+	}
+	document.getElementById("square").appendChild(start)
+	document.getElementById("square").appendChild(credits)
+}
+
+function deathScreen() {
+	start = document.createElement("button")
+	start.type = "button"
+	start.style.left = "min(20vh,20vw)"
+	start.style.top = "min(35vh,35vw)"
+	start.innerHTML = "PLAY AGAIN"
+	start.style.fontSize = "min(8vh,8vw)"
+	start.onclick = () => {
+		start.remove()
+		FalseGodKryptix = "day"
+	}
+	credits = document.createElement("button")
+	credits.type = "button"
+	credits.style.width = "min(30vh,30vw)"
+	credits.style.left = "min(25vh,25vw)"
+	credits.style.height = "min(6vh,6vw)"
+	credits.style.top = "min(50vh,50vw)"
+	credits.innerHTML = "BACK HOME"
+	credits.style.fontSize = "min(4vh,4vw)"
+	start.onclick = () => {
+		credits.remove()
+		start.remove()
+		FalseGodKryptix = "day"
+		timer = 0
+	}
+	credits.onclick = () => {
+		start.remove()
+		credits.remove()
+		mainMenu()
+		FalseGodKryptix = "menu"
+		timer = 0
+	}
+	document.getElementById("square").appendChild(start)
+	document.getElementById("square").appendChild(credits)
+}
+
+
+function mainCredits() {
+	document.getElementById("square").style.backgroundColor = "rgb(0,0,0)"
+	title = document.createElement("div")
+	title.style.position = "absolute"
+	title.style.textAlign = "center"
+	title.style.height = "min(10vh,10vw)"
+	title.style.width = "min(80vh, 80vw)"
+	title.style.top = "min(5vh,5vw)"
+	title.style.fontSize = "min(6vh,6vw)"
+	title.style.color = "white"
+
+	title.innerHTML = "SPECIAL THANKS TO MY KO-FI SUPPORTERS<br><br>Michael Thompson"
+	document.getElementById("square").appendChild(title)
+
+	menu = document.createElement("button")
+	menu.type = "button"
+	menu.style.left = "min(20vh,20vw)"
+	menu.style.top = "min(65vh,65vw)"
+	menu.innerHTML = "BACK"
+	menu.onclick = () => {
+		menu.remove()
+		title.remove()
+		FalseGodKryptix = "menu"
+		mainMenu()
+		timer = 0
+	}
+	document.getElementById("square").appendChild(menu)
+
+}
+speedBoost = 0
+luckBoost = 0
+chunkyBoost = 0
+leerBoost = 0
+scareBoost = 0
+function getOption(button) {
+	randCheck = Math.random()
+	if(randCheck < .4) {
+		button.innerHTML = "SPEED cost " + (1+speedBoost)
+		button.onclick = () => {
+			console.log("this")
+			if(score < 1+speedBoost) {
+				button.innerHTML = "not enough food"
+			} else {
+				score -= 1+speedBoost
+				speedBoost++
+				document.getElementById("score").innerHTML = score
+				button.remove()
+			}
+		}
+	} else if(randCheck < .65) {
+		button.innerHTML = "SCARE cost " + (2+2*scareBoost)
+		button.onclick = () => {
+			console.log("this")
+			if(score < 2+2*scareBoost) {
+				button.innerHTML = "not enough food"
+			} else {
+				score -= 2+2*scareBoost
+				scareBoost++
+				document.getElementById("score").innerHTML = score
+				button.remove()
+			}
+		}
+	} else if(randCheck < .90) {
+		button.innerHTML = "LEER cost " + (2+2*leerBoost)
+		button.onclick = () => {
+			console.log("this")
+			if(score < 2+2*leerBoost) {
+				button.innerHTML = "not enough food"
+			} else {
+				score -= 2+2*leerBoost
+				leerBoost++
+				document.getElementById("score").innerHTML = score
+				button.remove()
+			}
+		}
+	} else if(randCheck < .95) {
+		button.innerHTML = "LUCK cost " + (5*(1+luckBoost))
+		button.onclick = () => {
+			console.log("this")
+			if(score < 5*(1+luckBoost)) {
+				button.innerHTML = "not enough food"
+			} else {
+				score -= 5*(1+luckBoost)
+				luckBoost++
+				document.getElementById("score").innerHTML = score
+				button.remove()
+			}
+		}
+	} else {
+		button.innerHTML = "CHUNKS cost " + (5*(1+chunkBoost))
+		button.onclick = () => {
+			console.log("this")
+			if(score < 5*(1+chunkyBoost)) {
+				button.innerHTML = "not enough food"
+			} else {
+				score -= 5*(1+chunkyBoost)
+				chunkyBoost++
+				document.getElementById("score").innerHTML = score
+				button.remove()
+			}
+		}
+	}
+}
+
+
+function nightMenu() {
+	optionone = document.createElement("button")
+	optionone.className = "option"
+	optionone.type = "button"
+	optionone.style.left = "min(5vh,5vw)"
+	optionone.style.top = "min(5vh,5vw)"
+	optionone.style.fontSize = "min(4vh,4vw)"
+	optiontwo = document.createElement("button")
+	optiontwo.className = "option"
+	optiontwo.type = "button"
+	optiontwo.style.left = "min(30vh,30vw)"
+	optiontwo.style.top = "min(5vh,5vw)"
+	optiontwo.style.fontSize = "min(4vh,4vw)"
+	optionthree = document.createElement("button")
+	optionthree.className = "option"
+	optionthree.type = "button"
+	optionthree.style.left = "min(55vh,55vw)"
+	optionthree.style.top = "min(5vh,5vw)"
+	optionthree.style.fontSize = "min(4vh,4vw)"
+	nextday = document.createElement("button")
+	nextday.type = "button"
+	nextday.style.left = "min(20vh,20vw)"
+	nextday.style.top = "min(65vh,65vw)"
+	nextday.innerHTML = "CONTINUE"
+	nextday.onclick = () => {
+		optionone.remove()
+		optiontwo.remove()
+		optionthree.remove()
+		nextday.remove()
+		FalseGodKryptix = "day"
+		timer = 0
+	}
+	document.getElementById("square").appendChild(optionone)
+	document.getElementById("square").appendChild(optiontwo)
+	document.getElementById("square").appendChild(optionthree)
+	document.getElementById("square").appendChild(nextday)
+	getOption(optionone)
+	getOption(optiontwo)
+	getOption(optionthree)
+}
+mainMenu()
+score = 0
+bigwait = 0
+bigbadevent = false
+bigbadpos = [-10,0]
+setInterval(() => {
+//================================================================================================================
+//		LET THERE BE LIGHT :)
+//================================================================================================================
+if(FalseGodKryptix=="day") {
+	bigwait--
+	rgba = 135
+	rgbb = 206
+	rgbc = 250
+	grad = 1-((1800-timer)/1800)**2
+	document.getElementById("square").style.backgroundColor = "rgb("+rgba*grad+","+rgbb*grad+","+rgbc*grad+")"
+	timer++
+	if(Math.random()<.05*(0.9**day)*(1.1**luckBoost)) {
+		addFood()
+	}
+	if(Math.random()<.005*(1.04**day)) {
+		addEnemy()
+	}
+	if(bigbadevent) {
+		if(x>8&&x<11&&y<2) {
+			bigbadpos[0]+=((bigbadpos[0]>9)-.5)*.1
+			bigbad.style.left = "min("+4*bigbadpos[0]+"vh,"+4*bigbadpos[0]+"vw)"
+			if(bigbadpos[0]<-2||bigbadpos[0]>20) {
+				bigbadevent = false
+				bigwait = 10*60+20*60/day
+			}
+		} else {
+			dist = ((bigbadpos[0]+.5-x)**2+(bigbadpos[1]+.5-y)**2)**.5
+			bigbadpos[0]+=(x-.5-bigbadpos[0])*0.11*(1.04**day)/dist
+			bigbadpos[1]+=(y-.5-bigbadpos[1])*0.11*(1.04**day)/dist
+			if(dist<.5) {
+				FalseGodKryptix = "death"
+				x=9.5
+				y=0
+				cryssball.style.left="min("+4*x+"vh,"+4*x+"vh)"
+				cryssball.style.bottom="min("+4*y+"vh,"+4*y+"vh)"
+				document.getElementById("score").innerHTML = "dead"
+				score = 0
+				deathScreen()
+			}
+			bigbad.style.left = "min("+4*bigbadpos[0]+"vh,"+4*bigbadpos[0]+"vw)"
+			bigbad.style.bottom = "min("+4*bigbadpos[1]+"vh,"+4*bigbadpos[1]+"vw)"
+		}
+	} else if(Math.random()<0.0002*(1.2**day)&&bigwait<0) {
+		fx = -2 + (Math.random()<0.5)*22
+		fy = Math.random()*9+10
+		bigbad.style.left = "min("+4*fx+"vh,"+4*fx+"vw)"
+		bigbad.style.bottom = "min("+4*fy+"vh,"+4*fy+"vw)"
+		bigbadpos = [fx,fy]
+		bigbadevent = true
+	}
+	for(i = enemy.length-1;i>=0;i--) {
+		if(enemy[i][0]<x+3*(1.1**leerBoost)&&enemy[i][0]>x-3*(1.1**leerBoost)&&enemy[i][1]<y+3*(1.1**leerBoost)&&enemy[i][1]>y-3*(1.1**leerBoost)) {
+			enemy[i][0]+=((enemy[i][0]>x)-.5)*2*enemy[i][2]*(1.1**scareBoost)
+		} else if(enemy[i][0]<8||enemy[i][0]>11) {
+			dist = ((enemy[i][0]-9.5)**2+enemy[i][1]**2)**.5
+			enemy[i][0]+=(9.5-enemy[i][0])*enemy[i][2]/dist
+			enemy[i][1]+=-enemy[i][1]*enemy[i][2]/dist
+		} else if(day>20||timer%(120-day*5)==0){
+			score-=1
+			if(score<0) {
+				score = 0
+			}
+			document.getElementById("score").innerHTML = score
+		}
+		if(enemy[i][0]<-1.5||enemy[i][0]>20.5){
+			enemy[i][3].remove()
+			enemy.splice(i,1)
+		}
+		else {
+			enemy[i][3].style.left = "min("+4*enemy[i][0]+"vh,"+4*enemy[i][0]+"vw)"
+			enemy[i][3].style.bottom = "min("+4*enemy[i][1]+"vh,"+4*enemy[i][1]+"vw)"
+		}
+	}
+	for(i = food.length-1;i>=0;i--) {
+		food[i][0]+=food[i][2]
+		if(food[i][0]<x+1&&food[i][0]>x-1&&food[i][1]<y+1&&food[i][1]>y-1) {
+			food[i][3].remove()
+			food.splice(i,1)
+			score+=1+Math.floor(Math.random()*chunkyBoost)
+			document.getElementById("score").innerHTML = score
+		} else if(food[i][0]>20) {
+			food[i][3].remove()
+			food.splice(i,1)
+		} else {
+			food[i][3].style.left = "min("+4*food[i][0]+"vh,"+4*food[i][0]+"vw)"
+		}
+	}
+	winmin = Math.min(window.innerWidth,window.innerHeight)/100
+	dx = (mx-2-document.getElementById("square").getBoundingClientRect().left)/(winmin*4)-.5 - x
+	dy = 20-(my-2-document.getElementById("square").getBoundingClientRect().top)/(winmin*4)-.5 - y
+
+	dist = (dx**2+dy**2)**.5
+	if(spd*(1.1**speedBoost) > dist) {
+		x+=dx
+		y+=dy
+	} else if(dist!=0) {
+		dx = dx*spd*(1.1**speedBoost)/dist
+		dy = dy*spd*(1.1**speedBoost)/dist
+		x+=dx
+		y+=dy
+	}
+	cryssball.style.left = "min("+4*x+"vh,"+4*x+"vw)"
+	cryssball.style.bottom = "min("+4*y+"vh,"+4*y+"vw)"
+	if(timer>60*60) {
+		if(score < day) {
+			FalseGodKryptix = "death"
+			x=9.5
+			y=0
+			cryssball.style.left="min("+4*x+"vh,"+4*x+"vh)"
+			cryssball.style.bottom="min("+4*y+"vh,"+4*y+"vh)"
+			document.getElementById("score").innerHTML = "dead"
+			score = 0
+			deathScreen()
+		}else {
+			score-=day
+			day++
+			document.getElementById("score").innerHTML = score
+			FalseGodKryptix = "night"
+			nightMenu()
+		}
+	}
+//================================================================================================================
+//		LET THERE BE NIGHT :(
+//================================================================================================================
+} else if(FalseGodKryptix=="night") {
+	if(Math.random()<.01*(0.9**day)*(1.1**luckBoost)) {
+		addFood()
+	}
+
+	if(bigbadpos[0] > -2 || bigbadpos[0] < 20) {
+		bigbadpos[0]+=((bigbadpos[0]>9)-.5)*.2
+		bigbad.style.left = "min("+4*bigbadpos[0]+"vh,"+4*bigbadpos[0]+"vw)"
+		bigbadevent = false
+	}
+	for(i = enemy.length-1;i>=0;i--) {
+		enemy[i][0]+=((enemy[i][0]>9.5)-.5)*.2
+		if(enemy[i][0]<-1.5||enemy[i][0]>20.5){
+			enemy[i][3].remove()
+			enemy.splice(i,1)
+		}
+		else {
+			enemy[i][3].style.left = "min("+4*enemy[i][0]+"vh,"+4*enemy[i][0]+"vw)"
+			enemy[i][3].style.bottom = "min("+4*enemy[i][1]+"vh,"+4*enemy[i][1]+"vw)"
+		}
+	}
+	if(x!=9.5&&y!=0) {
+		dist = ((x-9.5)**2+y**2)**.5
+		x+=(9.5-x)*spd*(1.1**speedBoost)/dist
+		y+=(-y)*spd*(1.1**speedBoost)/dist
+		if(x>9&&x<10&&y<3) {
+			x=9.5
+			y=0
+		}
+		cryssball.style.left = "min("+4*x+"vh,"+4*x+"vw)"
+		cryssball.style.bottom = "min("+4*y+"vh,"+4*y+"vw)"
+	}
+	for(i = food.length-1;i>=0;i--) {
+		food[i][0]+=food[i][2]
+		if(food[i][0]<x+1&&food[i][0]>x-1&&food[i][1]<y+1&&food[i][1]>y-1) {
+			food[i][3].remove()
+			food.splice(i,1)
+			score++
+			document.getElementById("score").innerHTML = score
+		} else if(food[i][0]>20) {
+			food[i][3].remove()
+			food.splice(i,1)
+		} else {
+			food[i][3].style.left = "min("+4*food[i][0]+"vh,"+4*food[i][0]+"vw)"
+		}
+	}
+//================================================================================================================
+//		LET THERE BE DEATH :(
+//================================================================================================================
+} else if(FalseGodKryptix=="death") {
+	if(timer<3600) {
+		rgba = 135
+		rgbb = 206
+		rgbc = 250
+		grad = 1-((1800-timer)/1800)**2
+		document.getElementById("square").style.backgroundColor = "rgb("+rgba*grad+","+rgbb*grad+","+rgbc*grad+")"
+		timer+=5
+	}
+	if(Math.random()<.05*(1.1**luckBoost)) {
+		addFood()
+	}
+	if(bigbadpos[0] > -2 || bigbadpos[0] < 20) {
+		bigbadpos[0]+=((bigbadpos[0]>9)-.5)*.2
+		bigbad.style.left = "min("+4*bigbadpos[0]+"vh,"+4*bigbadpos[0]+"vw)"
+		bigbadevent = false
+	}
+	for(i = enemy.length-1;i>=0;i--) {
+		enemy[i][0]+=((enemy[i][0]>9.5)-.5)*.2
+		if(enemy[i][0]<-1.5||enemy[i][0]>20.5){
+			enemy[i][3].remove()
+			enemy.splice(i,1)
+		}
+		else {
+			enemy[i][3].style.left = "min("+4*enemy[i][0]+"vh,"+4*enemy[i][0]+"vw)"
+			enemy[i][3].style.bottom = "min("+4*enemy[i][1]+"vh,"+4*enemy[i][1]+"vw)"
+		}
+	}
+	for(i = food.length-1;i>=0;i--) {
+		food[i][0]+=food[i][2]
+		if(food[i][0]<x+1&&food[i][0]>x-1&&food[i][1]<y+1&&food[i][1]>y-1) {
+			food[i][3].remove()
+			food.splice(i,1)
+			score++
+			document.getElementById("score").innerHTML = score
+		} else if(food[i][0]>20) {
+			food[i][3].remove()
+			food.splice(i,1)
+		} else {
+			food[i][3].style.left = "min("+4*food[i][0]+"vh,"+4*food[i][0]+"vw)"
+		}
+	}
+//================================================================================================================
+//		LET THERE BE SETTINGS :(
+//================================================================================================================
+} else if(FalseGodKryptix=="settings") {
+	
+//================================================================================================================
+//		LET THERE BE BREAKS :(
+//================================================================================================================
+} else if(FalseGodKryptix=="pause") {
+	
+//================================================================================================================
+//		LET THERE BE CREDITS :(
+//================================================================================================================
+} else if(FalseGodKryptix=="credits") {
+	
+	if(Math.random()<.05*(1.1**luckBoost)) {
+		addFood()
+	}
+	for(i = food.length-1;i>=0;i--) {
+		food[i][0]+=food[i][2]
+		if(food[i][0]<x+1&&food[i][0]>x-1&&food[i][1]<y+1&&food[i][1]>y-1) {
+			food[i][3].remove()
+			food.splice(i,1)
+			score++
+			document.getElementById("score").innerHTML = score
+		} else if(food[i][0]>20) {
+			food[i][3].remove()
+			food.splice(i,1)
+		} else {
+			food[i][3].style.left = "min("+4*food[i][0]+"vh,"+4*food[i][0]+"vw)"
+		}
+	}
+	
+//================================================================================================================
+//		LET THERE BE MENUS :(
+//================================================================================================================
+} else if(FalseGodKryptix=="menu") {
+	document.getElementById("square").style.backgroundColor = "rgb(0,0,0)"
+
+
+	if(Math.random()<.05) {
+		addFood()
+	}
+	for(i = food.length-1;i>=0;i--) {
+		food[i][0]+=food[i][2]
+		if(food[i][0]<x+1&&food[i][0]>x-1&&food[i][1]<y+1&&food[i][1]>y-1) {
+			food[i][3].remove()
+			food.splice(i,1)
+			score++
+			document.getElementById("score").innerHTML = score
+		} else if(food[i][0]>20) {
+			food[i][3].remove()
+			food.splice(i,1)
+		} else {
+			food[i][3].style.left = "min("+4*food[i][0]+"vh,"+4*food[i][0]+"vw)"
+		}
+	}
+}
+},1000/60)
+
+}
+</script>
+</head>
+<body>
+<div id="title">
+<div id="name">FOOD</div>
+<div id="score">0</div>
+</div>
+<div id="square">
+<div id="gameover"></div>
+<div id="instructions"></div>
+<seg id="clown" style="left:min(38vh,38vw);bottom:0px;"></seg>
+<seg style="background-color:orange;left:min(36vh,36vw);bottom:0px;width:min(8vh,8vw);height:min(8vh,8vw)"></seg>
+<seg id="bigbad" style="background-color:red;left:min(-10vh,-10vw);bottom:0px;width:min(8vh,8vw);height:min(8vh,8vw)"></seg>
+</div>
+</body>
+</html>
+<!--
+SPECIAL THANKS TO MY KO-FI SUPPORTERS
+Michael Thompson
+-->

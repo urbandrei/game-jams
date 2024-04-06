@@ -1,0 +1,925 @@
+<DOCTYPE! html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+img{
+	position:absolute;
+	width:1500%;
+	height:400%;
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -o-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: pixelated;
+	image-rendering: optimize-contrast;
+	-ms-interpolation-mode: nearest-neighbor;
+	display:inline-block;
+
+}
+seg{
+	position:absolute;
+	height:min(8.1vw,8.1vh);
+	width:min(8.1vw,8.1vh);
+	background-color:black;
+	display:inline-block;
+}
+#square{
+	position:relative;
+	height:min(80vw,80vh);
+	width:min(80vw,80vh);
+	margin:auto;
+	border-style: solid;
+	border-width: min(1vw,1vh);
+	overflow:clip;
+	background-color:black;
+}
+#gameover{
+	position:absolute;
+	width:min(80vw,80vh);
+	font-size:min(12vw,12vh);
+	text-align:center;
+	bottom:min(40vh,40vw);
+}
+#instructions{
+	position:absolute;
+	width:min(80vw,80vh);
+	font-size:min(5vw,5vh);
+	text-align:center;
+	top:min(40vh,40vw);
+}
+#title{
+	font-family: "Pixelify Sans", sans-serif;
+  	font-optical-sizing: auto;
+  	font-weight: min(6vw,6vh);
+  	font-style: normal;
+	position:relative;
+	height:min(15vw,15vh);
+	width:min(80vw,80vh);
+	margin:auto;
+	font-size:min(6.3vw,6.3vh);
+vh);
+	float:center;
+
+}
+
+</style>
+<script>
+window.onload = function() {
+
+ch = document.createElement("img")
+
+tutorial = 0
+timer = 0
+start = -3
+hascandle = false
+haskey = false
+knifepos = 0
+bookpos = 0
+newcandlepos = [[6,6],[8,8],[6,8],[8,6]]
+x = 7
+newx = 7
+y = 7
+newy = 7
+dir = "up"
+newdir = "up"
+candles = [[5,1],[1,5],[13,8],[13,5]]
+doorsarray = [[4,1],[13,4]]
+function refresh() {
+death.play()
+timer = 0
+start = -3
+hascandle = false
+haskey = false
+knifepos = 0
+bookpos = 0
+newcandlepos = [[6,6],[8,8],[6,8],[8,6]]
+x = 7
+newx = 7
+y = 7
+newy = 7
+dir = "up"
+newdir = "up"
+candles = [[5,1],[1,5],[13,8],[13,5]]
+doorsarray = [[4,1],[13,4]]
+ch.style.opacity = 0
+ch.style.left = "0%"
+ch.style.top = "0%"
+}
+
+order = [0,4,1,3,2]
+
+crabs = [[4,4,"up"],[10,10,"down"]]
+
+
+
+walls = [[5,6],[5,7],[5,8],[9,6],[9,7],[9,8],[5,5],[9,5],[5,9],[6,9],[8,9],[9,9],[6,5],[7,5],[8,5],[3,10],[3,8],[3,7],[3,6],[3,4],[4,3],[6,3],[7,3],[8,3],[11,6],[11,7],[11,8],[11,10],[10,11],[8,11],[7,11],[6,11],[5,14],[6,14],[7,14],[8,14],[9,14],[7,13],[7,12],[12,10],[14,6],[14,5],[14,4],[12,4],[12,7],[13,7],[10,3],[10,2],[10,0],[7,0],[8,0],[9,0],[6,0],[5,0],[4,2],[7,2],[7,1],[2,4],[0,4],[0,5],[0,8],[0,6],[0,7],[0,9],[2,10],[1,7],[2,7],[4,0],[4,14],[4,12],[4,11],[10,12],[11,11],[4,13],[1,10],[0,10],[1,4],[3,11],[10,13],[10,14],[13,10],[14,10],[14,9],[14,8],[14,7],[11,3],[3,3],[14,3],[14,2],[14,1],[14,0],[13,0],[12,0],[11,0],[12,3],[12,2],[11,2],[3,0],[2,0],[1,0],[1,1],[1,2],[1,3],[2,3],[11,4],[9,3]]
+
+
+
+archesarray = [[13,4],[10,1],[5,3],[4,1],[3,5],[3,9],[5,11],[9,11],[11,9],[11,5],[7,9],[12,1],[13,2]]
+
+
+
+enemyloc = [1,2]
+
+bookloc = [8,1]
+
+
+tx=0
+ty=0
+document.addEventListener('touchstart',(event) => {
+		if (event.detail > 2) { event.preventDefault() }
+
+	tx = event.touches[0].screenX
+	ty = event.touches[0].screenY
+
+},false)
+document.addEventListener('touchend',(event) => {
+		if (event.detail > 1) { event.preventDefault() }
+
+	tx -= event.changedTouches[0].screenX
+	ty -= event.changedTouches[0].screenY
+	console.log(tx + " , " +ty)
+song.play()
+	step.currentTime = 0
+	step.play()
+	song.loop = true
+	song.volume = 0.3
+
+	if(tutorial==3) {
+			tutorial++
+			document.getElementById("title").innerHTML = "find a candle<br>(tip: look in the rooms)"
+		}
+	if(tutorial==6) {
+			tutorial++
+			document.getElementById("title").innerHTML = "unlock the red door"
+		}
+
+	if( Math.abs(ty)>Math.abs(tx)) {
+		if(tutorial==0) {
+			tutorial++
+			document.getElementById("title").innerHTML = "press a to look left"
+		}
+
+		if(x==2&&y==2&&dir=="left"&&knifepos==0) {
+			document.getElementById("title").innerHTML = "return to the pentagram"
+
+			knifepos = 1
+			ch.style.left = "-400%"
+			ch.style.opacity=1
+		} else if(x==2&&y==2&&dir=="left"&&knifepos==2) {
+			document.getElementById("title").innerHTML = "find another red door"
+
+			knifepos = 3
+			ch.style.left = "-300%"
+			haskey = true
+		}
+		blocked = false
+		for(i = 0;i<walls.length;i++) {
+			if(walls[i][0] == x+(dir=="right")-(dir=="left") && walls[i][1] == y+(dir=="up")-(dir=="down")) {
+				blocked = true
+			}
+		}
+		if(!blocked) {
+			for(i = 0;i<doorsarray.length;i++) {
+				if(doorsarray[i][0] == x+(dir=="right")-(dir=="left") && doorsarray[i][1] == y+(dir=="up")-(dir=="down")) {
+					if(i==0 && haskey) {
+						if(doorsarray.length==2) {
+document.getElementById("title").innerHTML = "grab the knife"
+} else {
+document.getElementById("title").innerHTML = "grab the book"
+}
+						haskey = false
+						doorsarray.splice(0,1)
+						ch.style.opacity = 0
+					} else {
+						blocked = true
+					}
+				}
+			}
+		}
+
+		
+		if(!blocked) {
+			newx=x+(dir=="right")-(dir=="left")
+			newy=y+(dir=="up")-(dir=="down")
+		}
+	}
+	if(tx<0 && -tx>Math.abs(ty)) {
+		if(tutorial==1) {
+			tutorial++
+			document.getElementById("title").innerHTML = "press d to look right"
+		}
+
+		if(dir == "up") {
+			newdir = "left"
+		} else if(dir == "left") {
+			newdir = "down"
+		} else if(dir == "down") {
+			newdir = "right"
+		} else if(dir == "right") {
+			newdir = "up"
+		}
+	}
+	if(tx>0 && tx>Math.abs(ty)) {
+		if(tutorial==2) {
+			tutorial++
+			document.getElementById("title").innerHTML = "don't get caught by the crabs"
+		}
+		if(dir == "up") {
+			newdir = "right"
+		} else if(dir == "left") {
+			newdir = "up"
+		} else if(dir == "down") {
+			newdir = "left"
+		} else if(dir == "right") {
+			newdir = "down"
+		}
+	}
+	x = newx
+	y = newy
+	dir = newdir
+	if(x==2&&y==2&&dir=="left"&&knifepos==0) {
+					document.getElementById("title").innerHTML = "press w to grab knife"}
+
+	if(!hascandle&&!(x>5&&x<9&&y>5&&y<9)) {
+		for(i = 0;i<candles.length;i++) {
+			if(candles[i][0] == x && candles[i][1] == y) {
+				document.getElementById("title").innerHTML = "bring it back to the pentagram"
+				console.log("this")
+				candles.splice(i,1)
+				hascandle = true
+				ch.style.left = "0%"
+				ch.style.opacity = 1
+			}
+		}
+	} else {
+		if(x>5&&x<9&&y>5&&y<9&&hascandle&&newcandlepos.length>0) {
+			document.getElementById("title").innerHTML = "get all remaining "+(newcandlepos.length-1)+ " candles"
+
+			candles.push(newcandlepos.pop())
+			hascandle = false
+			if(newcandlepos.length==0) {
+				document.getElementById("title").innerHTML = "a key appears in your hand"
+				haskey = true
+				ch.style.left = "-300%"
+			} else {
+				ch.style.opacity = 0
+			}
+		}
+	}
+	if(x == bookloc[0] && y == bookloc[1] && bookpos == 0) {
+		document.getElementById("title").innerHTML = "return to pentagram"
+
+		bookpos = 1
+		ch.style.left = "-600%"
+		ch.style.opacity = 1
+	} else if(x == 7 && y ==7 && bookpos == 1) {
+		bookpos = 2
+		ch.style.opacity = 0
+		document.getElementById("title").innerHTML = "CONGRATS<br>the ritual is done!"
+	}
+	render()
+
+}, false)
+
+
+
+document.addEventListener("keydown",(event) => {
+	song.play()
+	step.currentTime = 0
+	step.play()
+	song.loop = true
+	song.volume = 0.3
+
+	if(tutorial==3) {
+			tutorial++
+			document.getElementById("title").innerHTML = "find a candle<br>(tip: look in the rooms)"
+		}
+	if(tutorial==6) {
+			tutorial++
+			document.getElementById("title").innerHTML = "unlock the red door"
+		}
+
+	if(event.key == "w" ||  event.key == "ArrowUp") {
+		if(tutorial==0) {
+			tutorial++
+			document.getElementById("title").innerHTML = "press a to look left"
+		}
+
+		if(x==2&&y==2&&dir=="left"&&knifepos==0) {
+			document.getElementById("title").innerHTML = "return to the pentagram"
+
+			knifepos = 1
+			ch.style.left = "-400%"
+			ch.style.opacity=1
+		} else if(x==2&&y==2&&dir=="left"&&knifepos==2) {
+			document.getElementById("title").innerHTML = "find another red door"
+
+			knifepos = 3
+			ch.style.left = "-300%"
+			haskey = true
+		}
+		blocked = false
+		for(i = 0;i<walls.length;i++) {
+			if(walls[i][0] == x+(dir=="right")-(dir=="left") && walls[i][1] == y+(dir=="up")-(dir=="down")) {
+				blocked = true
+			}
+		}
+		if(!blocked) {
+			for(i = 0;i<doorsarray.length;i++) {
+				if(doorsarray[i][0] == x+(dir=="right")-(dir=="left") && doorsarray[i][1] == y+(dir=="up")-(dir=="down")) {
+					if(i==0 && haskey) {
+						if(doorsarray.length==2) {
+document.getElementById("title").innerHTML = "grab the knife"
+} else {
+document.getElementById("title").innerHTML = "grab the book"
+}
+						haskey = false
+						doorsarray.splice(0,1)
+						ch.style.opacity = 0
+					} else {
+						blocked = true
+					}
+				}
+			}
+		}
+
+		
+		if(!blocked) {
+			newx=x+(dir=="right")-(dir=="left")
+			newy=y+(dir=="up")-(dir=="down")
+		}
+	}
+	if(event.key == "a" || event.key == "ArrowLeft") {
+		if(tutorial==1) {
+			tutorial++
+			document.getElementById("title").innerHTML = "press d to look right"
+		}
+
+		if(dir == "up") {
+			newdir = "left"
+		} else if(dir == "left") {
+			newdir = "down"
+		} else if(dir == "down") {
+			newdir = "right"
+		} else if(dir == "right") {
+			newdir = "up"
+		}
+	}
+	if(event.key == "d" || event.key == "ArrowRight") {
+		if(tutorial==2) {
+			tutorial++
+			document.getElementById("title").innerHTML = "don't get caught by the crabs"
+		}
+		if(dir == "up") {
+			newdir = "right"
+		} else if(dir == "left") {
+			newdir = "up"
+		} else if(dir == "down") {
+			newdir = "left"
+		} else if(dir == "right") {
+			newdir = "down"
+		}
+	}
+	x = newx
+	y = newy
+	dir = newdir
+	if(x==2&&y==2&&dir=="left"&&knifepos==0) {
+					document.getElementById("title").innerHTML = "press w to grab knife"}
+
+	if(!hascandle&&!(x>5&&x<9&&y>5&&y<9)) {
+		for(i = 0;i<candles.length;i++) {
+			if(candles[i][0] == x && candles[i][1] == y) {
+				document.getElementById("title").innerHTML = "bring it back to the pentagram"
+				console.log("this")
+				candles.splice(i,1)
+				hascandle = true
+				ch.style.left = "0%"
+				ch.style.opacity = 1
+			}
+		}
+	} else {
+		if(x>5&&x<9&&y>5&&y<9&&hascandle&&newcandlepos.length>0) {
+			document.getElementById("title").innerHTML = "get all remaining "+(newcandlepos.length-1)+ " candles"
+
+			candles.push(newcandlepos.pop())
+			hascandle = false
+			if(newcandlepos.length==0) {
+				document.getElementById("title").innerHTML = "a key appears in your hand"
+				haskey = true
+				ch.style.left = "-300%"
+			} else {
+				ch.style.opacity = 0
+			}
+		}
+	}
+	if(x == bookloc[0] && y == bookloc[1] && bookpos == 0) {
+		document.getElementById("title").innerHTML = "return to pentagram"
+
+		bookpos = 1
+		ch.style.left = "-600%"
+		ch.style.opacity = 1
+	} else if(x == 7 && y ==7 && bookpos == 1) {
+		bookpos = 2
+		ch.style.opacity = 0
+		document.getElementById("title").innerHTML = "CONGRATS<br>the ritual is done!"
+	}
+	render()
+})
+
+images = []
+arches = []
+items = []
+doors = []
+pentagram = []
+enemy = []
+book = []
+crabsprites = []
+for(i = 0;i<4;i++) {
+	images.push([])
+	items.push([])
+	arches.push([])
+	doors.push([])
+	pentagram.push([])
+	enemy.push([])
+	book.push([])
+	crabsprites.push([])
+	for(k = 0;k<5;k++) {
+		images[i].push(null)
+		items[i].push(null)
+		arches[i].push(null)
+		doors[i].push(null)
+		pentagram[i].push(null)
+		enemy[i].push(null)
+		book[i].push(null)
+		crabsprites[i].push(null)
+	}
+}
+
+
+
+for(i = 3;i>=0;i--) {
+	for(j = 0;j<5;j++) {
+		if(j==2||j==3||(j==4/*&&i!=0*/)||(j<2&&i>1)) {
+			w = document.createElement("img")
+			w.src = "img/bricksall.png"
+			w.alt = "gameasset"
+			w.style.left = -100*order[j] + "%"
+			w.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(w)
+			images[i][order[j]] = w
+			c = document.createElement("img")
+			c.src = "img/candles.png"
+			c.style.width = "500%"
+			c.alt = "gameasset"
+			c.style.left = -100*order[j] + "%"
+			c.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(c)
+			items[i][order[j]] = c
+			a = document.createElement("img")
+			a.src = "img/arches.png"
+			a.style.width = "500%"
+			a.alt = "gameasset"
+			a.style.left = -100*order[j] + "%"
+			a.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(a)
+			arches[i][order[j]] = a
+			d = document.createElement("img")
+			d.src = "img/doors.png"
+			d.style.width = "1000%"
+			d.alt = "gameasset"
+			d.style.left = -100*order[j] + "%"
+			d.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(d)
+			doors[i][order[j]] = d
+			p = document.createElement("img")
+			p.src = "img/pentagram.png"
+			p.style.width = "500%"
+			p.alt = "gameasset"
+			p.style.left = -100*order[j] + "%"
+			p.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(p)
+			pentagram[i][order[j]] = p
+
+			en = document.createElement("img")
+			en.src = "img/enemy1.png"
+			en.style.width = "2000%"
+			en.alt = "gameasset"
+			en.style.left = -100*order[j] + "%"
+			en.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(en)
+			enemy[i][order[j]] = en
+
+			b = document.createElement("img")
+			b.src = "img/book.png"
+			b.style.width = "1000%"
+			b.alt = "gameasset"
+			b.style.left = -100*order[j] + "%"
+			b.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(b)
+			book[i][order[j]] = b
+
+			cr = document.createElement("img")
+			cr.src = "img/crabs.png"
+			cr.style.width = "1000%"
+			cr.alt = "gameasset"
+			cr.style.left = -100*order[j] + "%"
+			cr.style.top = -100*(3-i) + "%"
+			document.getElementById("square").appendChild(cr)
+			crabsprites[i][order[j]] = cr
+
+		}
+	}
+}
+
+ch.src = "img/candlehand.png"
+ch.alt = "gameasset"
+ch.style.height = "100%"
+ch.style.opacity = 0
+ch.style.width = "700%"
+ch.style.left = "0%"
+ch.style.top = "0%"
+document.getElementById("square").appendChild(ch)
+
+
+
+function render() {
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(images[i][j] != null) {
+				images[i][j].style.opacity = 0
+			}
+		}
+	}
+	for(i = 0; i<walls.length; i++) {
+		left = 0
+		up = 0
+		if(dir == "up") {
+			up = walls[i][0]-x+2
+			left = walls[i][1]-y
+		} else if(dir == "down") {
+			up = -walls[i][0]+x+2
+			left = -walls[i][1]+y
+		} else if(dir == "left") {
+			up = walls[i][1]-y+2
+			left = x-walls[i][0]
+		} else if(dir == "right") {
+			up = -walls[i][1]+y+2
+			left = walls[i][0]-x
+		}
+		if( left >= 0 && left < 4 && up >=0 && up < 5) {
+			if(images[left][up] != null) {
+				images[left][up].style.opacity=1
+				images[left][up].style.left = -100*up -500*((walls[i][0]+walls[i][1])%3)+ "%"
+			}
+		}
+	}
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(items[i][j] != null) {
+				items[i][j].style.opacity = 0
+			}
+		}
+	}
+	for(i = 0; i<candles.length; i++) {
+		left = 0
+		up = 0
+		if(dir == "up") {
+			up = candles[i][0]-x+2
+			left = candles[i][1]-y
+		} else if(dir == "down") {
+			up = -candles[i][0]+x+2
+			left = -candles[i][1]+y
+		} else if(dir == "left") {
+			up = candles[i][1]-y+2
+			left = x-candles[i][0]
+		} else if(dir == "right") {
+			up = -candles[i][1]+y+2
+			left = candles[i][0]-x
+		}
+		if( left >= 0 && left < 4 && up >=0 && up < 5) {
+			if(items[left][up] != null) {
+				items[left][up].style.opacity=1
+			}
+		}
+	}
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(items[i][j] != null) {
+				arches[i][j].style.opacity = 0
+			}
+		}
+	}
+
+	for(i = 0; i<archesarray.length; i++) {
+		left = 0
+		up = 0
+		if(dir == "up") {
+			up = archesarray[i][0]-x+2
+			left = archesarray[i][1]-y
+		} else if(dir == "down") {
+			up = -archesarray[i][0]+x+2
+			left = -archesarray[i][1]+y
+		} else if(dir == "left") {
+			up = archesarray[i][1]-y+2
+			left = x-archesarray[i][0]
+		} else if(dir == "right") {
+			up = -archesarray[i][1]+y+2
+			left = archesarray[i][0]-x
+		}
+		if( left >= 0 && left < 4 && up >=0 && up < 5) {
+			if(arches[left][up] != null) {
+				arches[left][up].style.opacity=1
+			}
+		}
+	}
+
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(pentagram[i][j] != null) {
+				pentagram[i][j].style.opacity = 0
+			}
+		}
+	}
+	if(dir == "up") {
+		up = 7-x+2
+		left = 7-y
+	} else if(dir == "down") {
+		up = -7+x+2
+		left = -7+y
+	} else if(dir == "left") {
+		up = 7-y+2
+		left = x-7
+	} else if(dir == "right") {
+		up = -7+y+2
+		left = 7-x
+	}
+	if( left >= 0 && left < 4 && up >=0 && up < 5) {
+		if(pentagram[left][up] != null) {
+			pentagram[left][up].style.opacity=1
+		}
+	}
+
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(items[i][j] != null) {
+				doors[i][j].style.opacity = 0
+			}
+		}
+	}
+
+	for(i = 0; i<doorsarray.length; i++) {
+		left = 0
+		up = 0
+		if(dir == "up") {
+			up = doorsarray[i][0]-x+2
+			left = doorsarray[i][1]-y
+		} else if(dir == "down") {
+			up = -doorsarray[i][0]+x+2
+			left = -doorsarray[i][1]+y
+		} else if(dir == "left") {
+			up = doorsarray[i][1]-y+2
+			left = x-doorsarray[i][0]
+		} else if(dir == "right") {
+			up = -doorsarray[i][1]+y+2
+			left = doorsarray[i][0]-x
+		}
+		if( left >= 0 && left < 4 && up >=0 && up < 5) {
+			if(doors[left][up] != null) {
+				doors[left][up].style.opacity=1
+				if(i==1) {
+					console.log("this")
+					doors[left][up].style.left=-100*up-500+ "%"
+				} else {
+					doors[left][up].style.left=-100*up+ "%"
+}
+
+			}
+		}
+	}
+
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(enemy[i][j] != null) {
+				enemy[i][j].style.opacity = 0
+			}
+		}
+	}
+
+	if(dir == "up") {
+		up = enemyloc[0]-x+2
+		left = enemyloc[1]-y
+	} else if(dir == "down") {
+		up = -enemyloc[0]+x+2
+		left = -enemyloc[1]+y
+	} else if(dir == "left") {
+		up = enemyloc[1]-y+2
+		left = x-enemyloc[0]
+	} else if(dir == "right") {
+		up = -enemyloc[1]+y+2
+		left = enemyloc[0]-x
+	}
+	if( left >= 0 && left < 4 && up >=0 && up < 5) {
+		if(enemy[left][up] != null) {
+			if(knifepos==0) {
+				enemy[left][up].style.left=-100*up-500+ "%"
+			}
+			else if(knifepos==1) {
+				enemy[left][up].style.left=-100*up+ "%"
+			} else if(knifepos==2) {
+				enemy[left][up].style.left=-100*up-1000+"%"
+			}else if(knifepos==3) {
+				enemy[left][up].style.left=-100*up-1500+"%"
+			}
+
+
+			enemy[left][up].style.opacity=1
+		}
+	}
+
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(enemy[i][j] != null) {
+				book[i][j].style.opacity = 0
+			}
+		}
+	}
+
+	if(dir == "up") {
+		up = bookloc[0]-x+2
+		left = bookloc[1]-y
+	} else if(dir == "down") {
+		up = -bookloc[0]+x+2
+		left = -bookloc[1]+y
+	} else if(dir == "left") {
+		up = bookloc[1]-y+2
+		left = x-bookloc[0]
+	} else if(dir == "right") {
+		up = -bookloc[1]+y+2
+		left = bookloc[0]-x
+	}
+	if( left >= 0 && left < 4 && up >=0 && up < 5) {
+		if(book[left][up] != null) {
+			if(bookpos!=0) {
+				book[left][up].style.left=-100*up-500+ "%"
+			}
+			else {
+				book[left][up].style.left=-100*up+ "%"
+			}
+
+
+			book[left][up].style.opacity=1
+		}
+	}
+
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(crabsprites[i][j] != null) {
+				crabsprites[i][j].style.opacity = 0
+			}
+		}
+	}
+
+	for(i = 0; i<crabs.length; i++) {
+		left = 0
+		up = 0
+		if(dir == "up") {
+			up = crabs[i][0]-x+2
+			left = crabs[i][1]-y
+		} else if(dir == "down") {
+			up = -crabs[i][0]+x+2
+			left = -crabs[i][1]+y
+		} else if(dir == "left") {
+			up = crabs[i][1]-y+2
+			left = x-crabs[i][0]
+		} else if(dir == "right") {
+			up = -crabs[i][1]+y+2
+			left = crabs[i][0]-x
+		}
+		if(crabs[i][0]==x &&crabs[i][1]==y) {
+			document.getElementById("title").innerHTML = "YOU DIED<br>try again"
+			refresh()
+			render()
+			enemyRender()
+		}
+		if( left >= 0 && left < 4 && up >=0 && up < 5) {
+			if(crabsprites[left][up] != null) {
+				crabsprites[left][up].style.opacity=1
+			}
+		}
+	}
+
+}
+
+function enemyRender() {
+
+	for(i=0;i<crabs.length;i++) {
+		if((crabs[i][0]==4||crabs[i][0]==10)&&(crabs[i][1]==4||crabs[i][1]==10)) {
+			if (Math.random() < 0.5) {
+				crabs[i][2] = "break"
+			} else if(Math.random() < 0.5) {
+				if(crabs[i][0]==4) {
+					crabs[i][2]="right"
+				} else {
+					crabs[i][2]="left"
+				}
+			} else {
+				if(crabs[i][1]==4) {
+					crabs[i][2]="up"
+				} else {
+					crabs[i][2]="down"
+				}
+			}
+		}
+		if(crabs[i][2]=="up") {crabs[i][1]+=1}
+		else if(crabs[i][2]=="down") {crabs[i][1]-=1}
+		else if(crabs[i][2]=="right") {crabs[i][0]+=1}
+		else if(crabs[i][2]=="left") {crabs[i][0]-=1}
+
+	}
+
+			
+	
+	for(i=0;i<4;i++) {
+		for(j=0;j<5;j++) {
+			if(crabsprites[i][j] != null) {
+				crabsprites[i][j].style.opacity = 0
+			}
+		}
+	}
+
+	for(i = 0; i<crabs.length; i++) {
+		left = 0
+		up = 0
+		if(dir == "up") {
+			up = crabs[i][0]-x+2
+			left = crabs[i][1]-y
+		} else if(dir == "down") {
+			up = -crabs[i][0]+x+2
+			left = -crabs[i][1]+y
+		} else if(dir == "left") {
+			up = crabs[i][1]-y+2
+			left = x-crabs[i][0]
+		} else if(dir == "right") {
+			up = -crabs[i][1]+y+2
+			left = crabs[i][0]-x
+		}
+		if(crabs[i][0]==x &&crabs[i][1]==y) {
+			document.getElementById("title").innerHTML = "YOU DIED<br>try again"
+			refresh()
+			render()
+			enemyRender()
+		}
+		if( left >= 0 && left < 4 && up >=0 && up < 5) {
+			if(crabsprites[left][up] != null) {
+				crabsprites[left][up].style.opacity=1
+			}
+		}
+	}
+
+}
+
+render()
+setInterval(() => {
+	if(hascandle&&knifepos!=1&&bookpos!=1) {
+		ch.style.left = -(timer%3)*100 + "%"
+	}
+	if(x == 7 && y == 7 && knifepos == 1) {
+		document.getElementById("title").innerHTML = "return the knife"
+
+		ch.style.left = "-500%"
+		ch.style.opacity = 1
+		start = timer
+		knifepos = 2
+	}
+	if(timer-start == 5) {
+		ch.style.left = "-400%"
+	}
+	if(timer%5==0) {
+		enemyRender()
+	}
+	timer++
+},1000/3)
+}
+</script>
+</head>
+<body style="background-color:white;">
+<audio id="step"><source src="misc/click.wav" type="audio/wav"></audio>
+<audio id="death"><source src="misc/explosion.wav" type="audio/wav"></audio>
+<audio id="song"><source src="misc/song.wav" type="audio/wav"></audio>
+
+
+<div id="title">press w to walk forward
+</div>
+<div id="square">
+<div id="gameover"></div>
+<div id="instructions"></div>
+
+
+</div>
+</body>
+</html>
