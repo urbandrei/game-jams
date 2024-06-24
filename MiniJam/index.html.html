@@ -1,0 +1,208 @@
+<script>
+window.onload = () => {
+	document.body.style.backgroundColor = "black"
+	document.body.style.overflow = "hidden"
+
+	elayer = document.createElement("div")
+	document.body.appendChild(elayer)
+	llayer = document.createElement("div")
+	document.body.appendChild(llayer)
+	blayer = document.createElement("div")
+	document.body.appendChild(blayer)
+
+	ox = 0
+	oy = 0
+	input = []
+	document.onkeydown = (e) => {
+		if(!input.includes(e.key)) {
+			input.push(e.key)
+		}
+	}
+	
+	document.onkeyup = (e) => {
+		i = input.indexOf(e.key)
+		if(i!=-1) {
+			input.splice(i,1)
+		}
+	}
+	
+	let logs = 10
+	let flaretime = 0
+
+	let light = document.createElement("div")
+	light.style.position = "absolute"
+	light.style.left = "calc(" + 50 + "*min(1vh,1vw))"
+	light.style.top = "calc(" + 50 + "*min(1vh,1vw))"
+	light.style.width = "calc(" + 0 + "*min(1vh,1vw))"
+	light.style.height = "calc(" + 0 + "*min(1vh,1vw))"
+	light.style.borderRadius = "50%"
+	light.style.backgroundColor = "white"
+	llayer.appendChild(light)
+
+	let limenage = document.createElement("button")
+	limenage.innerHTML = "🔥"
+	limenage.style.position = "absolute"
+	limenage.style.left = "calc(" + 45 + "*min(1vh,1vw))"
+	limenage.style.top = "calc(" + 45 + "*min(1vh,1vw))"
+	limenage.style.width = "calc(" + 10 + "*min(1vh,1vw))"
+	limenage.style.height = "calc(" + 10 + "*min(1vh,1vw))"
+	blayer.appendChild(limenage)
+	
+	buttons = [["found","light",limenage,50,50,light,0]]
+	
+	limenage.onclick = () => { if(logs>0) {
+		logs--
+		buttons[0][6]+=10+(buttons[0][6]<15)*15
+		buttons[0][5].style.height = "calc(" + buttons[0][6] + "*min(1vh,1vw))"
+		buttons[0][5].style.width = "calc(" + buttons[0][6] + "*min(1vh,1vw))"
+		buttons[0][5].style.left = "calc("+(buttons[0][3]-buttons[0][6]/2+ox)+"*min(1vh,1vw))"
+		buttons[0][5].style.top = "calc("+(buttons[0][4]-buttons[0][6]/2-oy)+"*min(1vh,1vw))"
+		for(let i=0;i<buttons.length;i++) {
+			if(buttons[i][0]!="found"&&((buttons[i][4]-buttons[0][4])**2+(buttons[i][3]-buttons[0][3])**2)**.5<=buttons[0][6]/2) {
+				buttons[i][0]="found"
+				blayer.appendChild(buttons[i][2])
+				if(buttons[i][1]=="light") {
+					llayer.appendChild(buttons[i][5])
+				}
+			}
+		}
+	}}
+
+	for(let i=0;i<10;i++) {
+		let x = Math.random()*90+5
+		let y = Math.random()*90+5
+
+		if(Math.random()<1/4) {
+			let light = document.createElement("div")
+			light.style.position = "absolute"
+			light.style.left = "calc("+x+"*min(1vh,1vw))"
+			light.style.top = "calc("+y+"*min(1vh,1vw))"
+			light.style.width = "calc("+0+"*min(1vh,1vw))"
+			light.style.height = "calc("+0+"*min(1vh,1vw))"
+			light.style.borderRadius = "50%"
+			light.style.backgroundColor = "white"
+
+			let torch = document.createElement("button")
+			torch.innerHTML = "🔥"
+			torch.style.position = "absolute"
+			torch.style.left = "calc("+(x-5)+"*min(1vh,1vw))"
+			torch.style.top = "calc("+(y-5)+"*min(1vh,1vw))"
+			torch.style.width = "calc("+10+"*min(1vh,1vw))"
+			torch.style.height = "calc("+10+"*min(1vh,1vw))"
+			torch.id = buttons.length
+
+			buttons.push(["hidden","light",torch,x,y,light,0])
+
+			torch.onclick = (event) => { if(logs>0) {
+				logs--
+				index = event.srcElement.id
+				buttons[index][6]+=10+(buttons[index][6]<15)*15
+				buttons[index][5].style.height = "calc("+buttons[index][6]+"*min(1vh,1vw))"
+				buttons[index][5].style.width = "calc("+buttons[index][6]+"*min(1vh,1vw))"
+				buttons[index][5].style.left = "calc("+(buttons[index][3]-buttons[index][6]/2+ox)+"*min(1vh,1vw))"
+
+				buttons[index][5].style.top = "calc("+(buttons[index][4]-buttons[index][6]/2-oy)+"*min(1vh,1vw))"
+
+
+				for(let i=0;i<buttons.length;i++) {
+					if(buttons[i][0]!="found"&&((buttons[i][4]-buttons[index][4])**2+(buttons[i][3]-buttons[index][3])**2)**.5<=buttons[index][6]/2) {
+						buttons[i][0]="found"
+						blayer.appendChild(buttons[i][2])
+						if(buttons[i][1]=="light") {
+							llayer.appendChild(buttons[i][5])
+						}
+					}
+				}
+			}}
+		} else if(Math.random()<2/3) {
+			let log = document.createElement("button")
+			log.innerHTML = "🪵"
+			log.style.position = "absolute"
+			log.style.left = "calc("+(x-5)+"*min(1vh,1vw))"
+			log.style.top = "calc("+(y-5)+"*min(1vh,1vw))"
+			log.style.width = "calc("+10+"*min(1vh,1vw))"
+			log.style.height = "calc("+10+"*min(1vh,1vw))"
+			log.id = buttons.length
+
+			buttons.push(["hidden","log",log,x,y,3])
+
+			log.onclick = (event) => {
+				logs++
+				index = event.srcElement.id
+				buttons[index][5]--
+				if(buttons[index][5]<=0) {
+					buttons[index][2].remove()
+				}
+			}
+
+		} else if(Math.random()<2/3){
+			let flare = document.createElement("button")
+			flare.innerHTML = "💥"
+			flare.style.position = "absolute"
+			flare.style.left = "calc("+(x-5)+"*min(1vh,1vw))"
+			flare.style.top = "calc("+(y-5)+"*min(1vh,1vw))"
+			flare.style.width = "calc("+10+"*min(1vh,1vw))"
+			flare.style.height = "calc("+10+"*min(1vh,1vw))"
+			flare.id = buttons.length
+
+			buttons.push(["hidden","flare",flare,x,y])
+
+			flare.onclick = (event) => {
+				buttons[event.srcElement.id][2].remove()
+				flaretime=5
+				document.body.style.backgroundColor = "white"
+			}
+		} else {
+			let page = document.createElement("button")
+			page.innerHTML = "📄"
+			page.style.position = "absolute"
+			page.style.left = "calc("+(x-5)+"*min(1vh,1vw))"
+			page.style.top = "calc("+(y-5)+"*min(1vh,1vw))"
+			page.style.width = "calc("+10+"*min(1vh,1vw))"
+			page.style.height = "calc("+10+"*min(1vh,1vw))"
+			page.id = buttons.length
+
+			buttons.push(["hidden","flare",page,x,y])
+
+			page.onclick = (event) => {
+				buttons[event.srcElement.id][2].remove()
+			}
+		}
+	}
+
+	setInterval(()=> {
+		if(input.includes("w")) {
+			oy-=1
+		}
+		if(input.includes("a")) {
+			ox+=1
+		}
+		if(input.includes("s")) {
+			oy+=1
+		}
+		if(input.includes("d")) {
+			ox-=1
+		}
+		if(flaretime>0) {
+			flaretime--
+			if(flaretime==0) {
+				document.body.style.backgroundColor = "black"
+			}
+		}
+		for(let i=0;i<buttons.length;i++) {
+			buttons[i][2].style.left = "calc("+(buttons[i][3]+ox-5)+"*min(1vh,1vw))"
+			buttons[i][2].style.top = "calc("+(buttons[i][4]-oy-5)+"*min(1vh,1vw))"
+			if(buttons[i][0]=="found") {
+				if(buttons[i][1]=="light") {
+					buttons[i][6]=buttons[i][6]*.999
+					buttons[i][5].style.height = "calc("+buttons[i][6]+"*min(1vh,1vw))"
+					buttons[i][5].style.width = "calc("+buttons[i][6]+"*min(1vh,1vw))"
+					buttons[i][5].style.left = "calc("+(buttons[i][3]-buttons[i][6]/2+ox)+"*min(1vh,1vw))"
+					buttons[i][5].style.top = "calc("+(buttons[i][4]-buttons[i][6]/2-oy)+"*min(1vh,1vw))"
+				}
+			}
+		}
+		
+	},1000/60)
+}
+</script>
